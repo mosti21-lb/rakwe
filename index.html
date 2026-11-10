@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artisan Brews Coffee</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        coffee: {
+                            50: '#FDFBF7',
+                            100: '#F5EBE6',
+                            200: '#E6D7CD',
+                            300: '#D5C0B3',
+                            400: '#B89685',
+                            500: '#8C6754',
+                            600: '#6F4E37',
+                            700: '#4A3324',
+                            800: '#2C1E16',
+                            900: '#1A120C',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1A120C; }
+        ::-webkit-scrollbar-thumb { background: #6F4E37; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8C6754; }
+
+        /* Animations: entrance fades, drifting beans, hover lift. Disabled for reduced-motion users. */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+        @keyframes drift { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-14px) rotate(8deg); } }
+        .reveal { animation: fadeUp 0.9s ease both; }
+        .delay-1 { animation-delay: 0.15s; }
+        .delay-2 { animation-delay: 0.3s; }
+        .bean-float { animation-name: drift; animation-timing-function: ease-in-out; animation-iteration-count: infinite; transform-box: fill-box; transform-origin: center; }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+    </style>
+</head>
+<body class="bg-coffee-900 text-neutral-100 antialiased selection:bg-coffee-600 selection:text-white">
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="bg-coffee-800 text-coffee-200 text-xs py-2 px-4 text-center border-b border-coffee-700/50 flex justify-center items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>Fresh roasted Brazilian & Colombian beans delivered to your door. Order directly on WhatsApp!</span>
+    </div>
+
+    <!-- NAVBAR -->
+    <header class="sticky top-0 z-50 bg-coffee-900/95 backdrop-blur-md border-b border-coffee-800/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="#" class="flex items-center gap-3 group">
+                    <img src="data:image/png;base64,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" alt="rakwe logo" class="h-10 w-auto shrink-0 group-hover:scale-105 transition-transform">
+                    <div class="flex flex-col">
+                        <span class="font-serif text-2xl font-bold tracking-tight text-white group-hover:text-coffee-300 transition-colors">rakwe</span>
+                        <span class="text-[10px] tracking-widest text-coffee-400 uppercase -mt-1">Craft Coffee Roasters</span>
+                    </div>
+                </a>
+
+                <nav class="hidden md:flex items-center space-x-8 font-medium text-sm">
+                    <a href="#home" class="text-coffee-200 hover:text-white transition-colors">Home</a>
+                    <a href="#shop" class="text-coffee-200 hover:text-white transition-colors">Our Coffee</a>
+                    <a href="#knowledge" class="text-coffee-200 hover:text-white transition-colors">Coffee Guide</a>
+                    <a href="#custom-order" class="text-coffee-200 hover:text-white transition-colors">Quick Order</a>
+                    <a href="#contact" class="text-coffee-200 hover:text-white transition-colors">Contact</a>
+                </nav>
+
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="text-coffee-300 hover:text-white text-xl transition-colors p-2" title="Instagram Profile">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/96181851836?text=Hello!%20I'd%20like%20to%20know%20more%20about%20your%20coffee." target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-full font-medium text-sm transition-all duration-300 shadow-lg shadow-emerald-900/30 hover:scale-105">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>WhatsApp Us</span>
+                    </a>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" type="button" class="text-coffee-300 hover:text-white p-2 rounded-md focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl" id="menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-coffee-800 border-b border-coffee-700 px-4 pt-2 pb-6 space-y-3">
+            <a href="#home" class="mobile-link block py-2 text-coffee-100 hover:text-white font-medium border-b border-coffee-700/50">Home</a>
+            <a href="#shop" class="mobile-link block py-2 text-coffee-100 hover:text-white font-medium border-b border-coffee-700/50">Our Coffee</a>
+            <a href="#knowledge" class="mobile-link block py-2 text-coffee-100 hover:text-white font-medium border-b border-coffee-700/50">Coffee Guide</a>
+            <a href="#custom-order" class="mobile-link block py-2 text-coffee-100 hover:text-white font-medium border-b border-coffee-700/50">Quick Order</a>
+            <a href="#contact" class="mobile-link block py-2 text-coffee-100 hover:text-white font-medium border-b border-coffee-700/50">Contact</a>
+            <div class="pt-4 flex flex-col gap-3">
+                <a href="https://wa.me/96181851836?text=Hello!%20I'd%20like%20to%20place%20an%20order." target="_blank" rel="noopener" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-medium text-center flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                    <span>Order via WhatsApp</span>
+                </a>
+                <a href="https://instagram.com" target="_blank" rel="noopener" class="w-full bg-coffee-700 hover:bg-coffee-600 text-white py-3 rounded-xl font-medium text-center flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-instagram text-xl"></i>
+                    <span>Follow on Instagram</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="relative min-h-[85vh] flex items-center justify-center overflow-hidden py-20">
+        <div class="absolute inset-0 z-0">
+            <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" class="absolute inset-0 w-full h-full opacity-30" aria-hidden="true"><g class="bean-float" style="animation-duration:9.4s;animation-delay:-6.1s"><g transform="translate(1145 401) rotate(123)"><ellipse rx="24" ry="26" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -20.8 Q8.4 0 0 20.8" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:7.4s;animation-delay:-7.9s"><g transform="translate(127 195) rotate(41)"><ellipse rx="15" ry="25" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -20.0 Q5.2 0 0 20.0" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:7.6s;animation-delay:-4.3s"><g transform="translate(1230 53) rotate(137)"><ellipse rx="15" ry="25" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -20.0 Q5.2 0 0 20.0" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:7.4s;animation-delay:-7.9s"><g transform="translate(1256 26) rotate(96)"><ellipse rx="16" ry="30" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -24.0 Q5.6 0 0 24.0" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:10.6s;animation-delay:-5.3s"><g transform="translate(516 355) rotate(29)"><ellipse rx="21" ry="27" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -21.6 Q7.3 0 0 21.6" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:8.9s;animation-delay:-8.6s"><g transform="translate(983 495) rotate(87)"><ellipse rx="18" ry="27" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -21.6 Q6.3 0 0 21.6" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:10.1s;animation-delay:-7.9s"><g transform="translate(1417 165) rotate(135)"><ellipse rx="19" ry="22" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -17.6 Q6.6 0 0 17.6" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:12.5s;animation-delay:-2.4s"><g transform="translate(1413 556) rotate(76)"><ellipse rx="24" ry="21" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -16.8 Q8.4 0 0 16.8" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:8.6s;animation-delay:-6.3s"><g transform="translate(1425 865) rotate(42)"><ellipse rx="19" ry="32" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -25.6 Q6.6 0 0 25.6" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:10.2s;animation-delay:-5.0s"><g transform="translate(456 545) rotate(162)"><ellipse rx="17" ry="29" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -23.2 Q5.9 0 0 23.2" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:8.2s;animation-delay:-7.6s"><g transform="translate(1553 873) rotate(102)"><ellipse rx="17" ry="23" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:9.1s;animation-delay:-9.7s"><g transform="translate(1060 504) rotate(7)"><ellipse rx="18" ry="27" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -21.6 Q6.3 0 0 21.6" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:11.2s;animation-delay:-0.4s"><g transform="translate(530 198) rotate(114)"><ellipse rx="19" ry="25" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -20.0 Q6.6 0 0 20.0" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:7.6s;animation-delay:-5.3s"><g transform="translate(164 225) rotate(86)"><ellipse rx="17" ry="27" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -21.6 Q5.9 0 0 21.6" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:12.0s;animation-delay:-5.2s"><g transform="translate(1278 624) rotate(167)"><ellipse rx="19" ry="32" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -25.6 Q6.6 0 0 25.6" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:12.0s;animation-delay:-8.8s"><g transform="translate(1317 86) rotate(99)"><ellipse rx="17" ry="27" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -21.6 Q5.9 0 0 21.6" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:11.7s;animation-delay:-6.7s"><g transform="translate(365 444) rotate(101)"><ellipse rx="21" ry="26" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -20.8 Q7.3 0 0 20.8" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:11.3s;animation-delay:-8.3s"><g transform="translate(1522 86) rotate(32)"><ellipse rx="14" ry="22" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -17.6 Q4.9 0 0 17.6" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:11.8s;animation-delay:-8.5s"><g transform="translate(1209 476) rotate(152)"><ellipse rx="21" ry="30" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -24.0 Q7.3 0 0 24.0" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:10.3s;animation-delay:-8.7s"><g transform="translate(717 159) rotate(3)"><ellipse rx="24" ry="21" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -16.8 Q8.4 0 0 16.8" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:12.6s;animation-delay:-5.7s"><g transform="translate(1078 767) rotate(49)"><ellipse rx="17" ry="20" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -16.0 Q5.9 0 0 16.0" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:8.8s;animation-delay:-7.6s"><g transform="translate(515 217) rotate(150)"><ellipse rx="19" ry="24" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -19.2 Q6.6 0 0 19.2" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:12.0s;animation-delay:-9.4s"><g transform="translate(1114 429) rotate(90)"><ellipse rx="21" ry="30" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -24.0 Q7.3 0 0 24.0" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:12.4s;animation-delay:-5.8s"><g transform="translate(1194 834) rotate(128)"><ellipse rx="16" ry="28" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -22.4 Q5.6 0 0 22.4" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:10.1s;animation-delay:-1.3s"><g transform="translate(310 536) rotate(46)"><ellipse rx="23" ry="20" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -16.0 Q8.0 0 0 16.0" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g><g class="bean-float" style="animation-duration:7.9s;animation-delay:-8.6s"><g transform="translate(1589 818) rotate(158)"><ellipse rx="15" ry="28" fill="#8C6754" stroke="#D5C0B3" stroke-width="2"/><path d="M0 -22.4 Q5.2 0 0 22.4" fill="none" stroke="#D5C0B3" stroke-width="2.5" stroke-linecap="round"/></g></g></svg>
+            <div class="absolute inset-0 bg-gradient-to-t from-coffee-900 via-coffee-900/80 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-coffee-800/80 border border-coffee-600/50 text-coffee-300 text-xs font-semibold uppercase tracking-widest mb-6 backdrop-blur-sm">
+                Brazilian & Colombian • Small Batch Roasts
+            </span>
+            <h1 class="reveal font-serif text-4xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-tight mb-6">
+                Elevate Your Daily <br class="hidden sm:inline">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-coffee-300 via-coffee-400 to-coffee-100">Coffee Ritual</span>
+            </h1>
+            <p class="reveal delay-1 text-lg sm:text-xl text-coffee-200 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+                Handpicked Brazilian and Colombian beans roasted to perfection. Order directly on WhatsApp and get it delivered to your door.
+            </p>
+
+            <div class="reveal delay-2 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+                <a href="#shop" class="w-full sm:w-auto px-8 py-4 bg-coffee-600 hover:bg-coffee-500 text-white rounded-full font-semibold text-base transition-all duration-300 shadow-lg shadow-coffee-600/40 hover:scale-105 flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span>Explore Coffee</span>
+                </a>
+                <a href="https://wa.me/96181851836?text=Hi!%20I'm%20interested%20in%20ordering%20coffee." target="_blank" rel="noopener" class="w-full sm:w-auto px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full font-semibold text-base transition-all duration-300 shadow-lg shadow-emerald-900/40 hover:scale-105 flex items-center justify-center gap-3">
+                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                    <span>Order via WhatsApp</span>
+                </a>
+            </div>
+
+            <div class="mt-16 grid grid-cols-2 sm:grid-cols-3 gap-6 pt-10 border-t border-coffee-800/80 max-w-3xl mx-auto">
+                <div class="text-center">
+                    <p class="font-serif text-3xl font-bold text-white">100%</p>
+                    <p class="text-xs text-coffee-400 uppercase tracking-wider mt-1">Single Origin Arabica</p>
+                </div>
+                <div class="text-center">
+                    <p class="font-serif text-3xl font-bold text-white">Fresh</p>
+                    <p class="text-xs text-coffee-400 uppercase tracking-wider mt-1">Weekly Small Batch</p>
+                </div>
+                <div class="col-span-2 sm:col-span-1 text-center">
+                    <p class="font-serif text-3xl font-bold text-white">Local</p>
+                    <p class="text-xs text-coffee-400 uppercase tracking-wider mt-1">Delivery in Your Area</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHOP / PRODUCT SELECTION -->
+    <section id="shop" class="py-20 bg-coffee-900 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-semibold uppercase tracking-widest text-coffee-400 mb-2">Selected Beans</h2>
+                <p class="font-serif text-3xl sm:text-5xl font-bold text-white mb-4">Our Signature Roasts</p>
+                <div class="w-16 h-1 bg-coffee-600 mx-auto rounded-full mb-6"></div>
+                <p class="text-coffee-300 text-sm sm:text-base">
+                    Choose your coffee type and grind size, then order straight from WhatsApp. Price: $18 per kilo.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+
+                <!-- Product 1: Brazilian -->
+                <div class="bg-coffee-800/80 rounded-2xl overflow-hidden border border-coffee-700/60 hover:border-coffee-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-coffee-900 transition-all duration-300 group flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-64 overflow-hidden bg-coffee-900">
+                            <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" class="w-full h-full transition-transform duration-500 group-hover:scale-110" role="img" aria-label="Roasted coffee beans"><defs><radialGradient id="gBr" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#B89685" stop-opacity="0.35"/><stop offset="100%" stop-color="#1A120C"/></radialGradient></defs><rect width="300" height="200" fill="url(#gBr)"/><g transform="translate(122 68) rotate(101)"><ellipse rx="17" ry="23" fill="#2C1E16" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(52 48) rotate(137)"><ellipse rx="17" ry="23" fill="#6F4E37" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(133 44) rotate(129)"><ellipse rx="17" ry="23" fill="#6F4E37" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(49 52) rotate(111)"><ellipse rx="17" ry="23" fill="#B89685" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(57 91) rotate(23)"><ellipse rx="17" ry="23" fill="#2C1E16" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(148 45) rotate(144)"><ellipse rx="17" ry="23" fill="#6F4E37" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(97 45) rotate(147)"><ellipse rx="17" ry="23" fill="#2C1E16" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(141 42) rotate(56)"><ellipse rx="17" ry="23" fill="#6F4E37" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(182 64) rotate(74)"><ellipse rx="17" ry="23" fill="#B89685" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(76 168) rotate(30)"><ellipse rx="17" ry="23" fill="#2C1E16" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(118 76) rotate(26)"><ellipse rx="17" ry="23" fill="#2C1E16" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(186 78) rotate(95)"><ellipse rx="17" ry="23" fill="#6F4E37" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(180 46) rotate(144)"><ellipse rx="17" ry="23" fill="#6F4E37" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(198 82) rotate(127)"><ellipse rx="17" ry="23" fill="#2C1E16" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(176 139) rotate(80)"><ellipse rx="17" ry="23" fill="#B89685" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(189 146) rotate(92)"><ellipse rx="17" ry="23" fill="#B89685" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(103 76) rotate(178)"><ellipse rx="17" ry="23" fill="#6F4E37" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(60 106) rotate(134)"><ellipse rx="17" ry="23" fill="#B89685" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(127 144) rotate(73)"><ellipse rx="17" ry="23" fill="#2C1E16" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(58 60) rotate(131)"><ellipse rx="17" ry="23" fill="#B89685" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(82 117) rotate(38)"><ellipse rx="17" ry="23" fill="#B89685" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(147 40) rotate(171)"><ellipse rx="17" ry="23" fill="#6F4E37" stroke="#2C1E16" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#2C1E16" stroke-width="2.5" stroke-linecap="round"/></g></svg>
+                            <span class="absolute top-4 right-4 bg-coffee-900/90 text-coffee-200 text-xs px-3 py-1 rounded-full font-medium border border-coffee-700">Medium Roast</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-serif text-2xl font-bold text-white">Brazilian Santos</h3>
+                                
+                            </div>
+                            <p class="text-xs text-coffee-400 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-location-dot"></i> Minas Gerais, Brazil • Nutty & Chocolate
+                            </p>
+                            <p class="text-sm text-coffee-200 leading-relaxed mb-6">
+                                Smooth and low-acidity, with nutty, milk-chocolate notes.
+                            </p>
+
+                            
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2">
+                        <button onclick="orderProduct('Brazilian Santos')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-md shadow-emerald-950/50">
+                            <i class="fa-brands fa-whatsapp text-lg"></i>
+                            <span>Order on WhatsApp</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product 2: Colombian -->
+                <div class="bg-coffee-800/80 rounded-2xl overflow-hidden border border-coffee-700/60 hover:border-coffee-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-coffee-900 transition-all duration-300 group flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-64 overflow-hidden bg-coffee-900">
+                            <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" class="w-full h-full transition-transform duration-500 group-hover:scale-110" role="img" aria-label="Roasted coffee beans"><defs><radialGradient id="gCo" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#D5C0B3" stop-opacity="0.35"/><stop offset="100%" stop-color="#1A120C"/></radialGradient></defs><rect width="300" height="200" fill="url(#gCo)"/><g transform="translate(235 110) rotate(87)"><ellipse rx="17" ry="23" fill="#4A3324" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(129 157) rotate(148)"><ellipse rx="17" ry="23" fill="#D5C0B3" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(57 53) rotate(69)"><ellipse rx="17" ry="23" fill="#D5C0B3" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(218 46) rotate(15)"><ellipse rx="17" ry="23" fill="#4A3324" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(219 109) rotate(165)"><ellipse rx="17" ry="23" fill="#4A3324" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(214 144) rotate(72)"><ellipse rx="17" ry="23" fill="#4A3324" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(138 118) rotate(5)"><ellipse rx="17" ry="23" fill="#D5C0B3" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(130 73) rotate(156)"><ellipse rx="17" ry="23" fill="#8C6754" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(166 45) rotate(55)"><ellipse rx="17" ry="23" fill="#D5C0B3" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(73 93) rotate(101)"><ellipse rx="17" ry="23" fill="#D5C0B3" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(167 50) rotate(42)"><ellipse rx="17" ry="23" fill="#D5C0B3" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(142 170) rotate(71)"><ellipse rx="17" ry="23" fill="#8C6754" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(249 140) rotate(140)"><ellipse rx="17" ry="23" fill="#D5C0B3" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(220 136) rotate(91)"><ellipse rx="17" ry="23" fill="#4A3324" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(137 89) rotate(38)"><ellipse rx="17" ry="23" fill="#8C6754" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(85 68) rotate(59)"><ellipse rx="17" ry="23" fill="#4A3324" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(99 33) rotate(124)"><ellipse rx="17" ry="23" fill="#4A3324" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(86 97) rotate(72)"><ellipse rx="17" ry="23" fill="#8C6754" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(77 137) rotate(136)"><ellipse rx="17" ry="23" fill="#D5C0B3" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(196 111) rotate(32)"><ellipse rx="17" ry="23" fill="#4A3324" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(259 161) rotate(158)"><ellipse rx="17" ry="23" fill="#4A3324" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g><g transform="translate(213 43) rotate(116)"><ellipse rx="17" ry="23" fill="#4A3324" stroke="#4A3324" stroke-width="2"/><path d="M0 -18.4 Q5.9 0 0 18.4" fill="none" stroke="#4A3324" stroke-width="2.5" stroke-linecap="round"/></g></svg>
+                            <span class="absolute top-4 right-4 bg-coffee-900/90 text-coffee-200 text-xs px-3 py-1 rounded-full font-medium border border-coffee-700">Medium Roast</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-serif text-2xl font-bold text-white">Colombian Supremo</h3>
+                                
+                            </div>
+                            <p class="text-xs text-coffee-400 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-location-dot"></i> Huila, Colombia • Caramel & Roasted Nuts
+                            </p>
+                            <p class="text-sm text-coffee-200 leading-relaxed mb-6">
+                                Balanced and smooth, with caramel and toasted hazelnut notes.
+                            </p>
+
+                            
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2">
+                        <button onclick="orderProduct('Colombian Supremo')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-md shadow-emerald-950/50">
+                            <i class="fa-brands fa-whatsapp text-lg"></i>
+                            <span>Order on WhatsApp</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- COFFEE KNOWLEDGE SECTION -->
+    <section id="knowledge" class="py-20 bg-coffee-800/40 border-y border-coffee-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-semibold uppercase tracking-widest text-coffee-400">Essential Barista Knowledge</span>
+                <h2 class="font-serif text-3xl sm:text-5xl font-bold text-white mt-2 mb-4">Coffee Knowledge Hub</h2>
+                <div class="w-16 h-1 bg-coffee-600 mx-auto rounded-full mb-6"></div>
+                <p class="text-coffee-300 text-sm sm:text-base">
+                    Great coffee starts with understanding your grind, brew techniques, and bean storage. Learn how to get the finest flavor from every cup.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <div class="bg-coffee-900 p-8 rounded-2xl border border-coffee-700/60 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-coffee-700/50 text-coffee-300 rounded-xl flex items-center justify-center text-2xl mb-6">
+                            <i class="fa-solid fa-sliders"></i>
+                        </div>
+                        <h3 class="font-serif text-2xl font-bold text-white mb-4">1. The Grind Size Matrix</h3>
+                        <p class="text-coffee-300 text-sm leading-relaxed mb-6">
+                            Grind size controls how fast water extracts flavor from coffee. Matching the grind to your brewing tool is the #1 secret to a great cup:
+                        </p>
+                        <ul class="space-y-3 text-sm text-coffee-200">
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check text-coffee-400 mt-1"></i>
+                                <span><strong class="text-white">Extra Fine (Powder):</strong> Essential for Rakweh / Turkish coffee. Extracts instantly under heat.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check text-coffee-400 mt-1"></i>
+                                <span><strong class="text-white">Fine:</strong> Best for Espresso machines and Moka Pot.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check text-coffee-400 mt-1"></i>
+                                <span><strong class="text-white">Medium:</strong> Ideal for V60, Chemex, and classic drip filter coffee.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check text-coffee-400 mt-1"></i>
+                                <span><strong class="text-white">Coarse:</strong> Perfect for French Press and Cold Brew to prevent bitterness.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-coffee-900 p-8 rounded-2xl border border-coffee-700/60 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-coffee-700/50 text-coffee-300 rounded-xl flex items-center justify-center text-2xl mb-6">
+                            <i class="fa-solid fa-fire-burner"></i>
+                        </div>
+                        <h3 class="font-serif text-2xl font-bold text-white mb-4">2. Perfect Rakweh Ritual</h3>
+                        <p class="text-coffee-300 text-sm leading-relaxed mb-6">
+                            Brewing authentic Middle Eastern Rakweh coffee requires patience, precise water-to-coffee ratio, and heat control:
+                        </p>
+                        <ol class="space-y-3 text-sm text-coffee-200 list-decimal list-inside">
+                            <li class="pl-1"><strong class="text-white">Water First:</strong> Measure cold water in your Rakweh pot (approx. 60ml per cup).</li>
+                            <li class="pl-1"><strong class="text-white">Add Coffee:</strong> Add 1 heaped tablespoon of fine Rakweh coffee per cup (add sugar now if desired).</li>
+                            <li class="pl-1"><strong class="text-white">Gentle Stir:</strong> Stir well cold, then place over low heat. Do not stir again.</li>
+                            <li class="pl-1"><strong class="text-white">Watch the Foam:</strong> As it comes to a simmer, a rich golden foam (face/ وجه) will rise. Remove from heat just before boiling!</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="bg-coffee-900 p-8 rounded-2xl border border-coffee-700/60 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-coffee-700/50 text-coffee-300 rounded-xl flex items-center justify-center text-2xl mb-6">
+                            <i class="fa-solid fa-box-archive"></i>
+                        </div>
+                        <h3 class="font-serif text-2xl font-bold text-white mb-4">3. Freshness & Degassing</h3>
+                        <p class="text-coffee-300 text-sm leading-relaxed mb-6">
+                            Keep your specialty coffee tasting as fresh as the day it was roasted by protecting it from its 4 enemies:
+                        </p>
+                        <div class="space-y-4 text-sm text-coffee-200">
+                            <div class="p-3 bg-coffee-800/50 rounded-lg border border-coffee-700/40">
+                                <h4 class="font-bold text-white mb-1">Air, Moisture, Light & Heat</h4>
+                                <p class="text-xs text-coffee-300">Always store your beans in an airtight container with a one-way degassing valve in a cool, dark cupboard.</p>
+                            </div>
+                            <div class="p-3 bg-coffee-800/50 rounded-lg border border-coffee-700/40">
+                                <h4 class="font-bold text-white mb-1">Never Fridge Your Beans!</h4>
+                                <p class="text-xs text-coffee-300">Storing coffee in the refrigerator creates condensation that destroys delicate aromatic oils.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- QUICK CUSTOM ORDER BUILDER -->
+    <section id="custom-order" class="py-20 bg-coffee-900">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <div class="bg-gradient-to-b from-coffee-800 to-coffee-900 p-8 sm:p-12 rounded-3xl border border-coffee-700/80 shadow-2xl relative overflow-hidden">
+                <div class="text-center mb-10">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-emerald-400">Direct Order Form</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white mt-2">Custom WhatsApp Order</h2>
+                    <p class="text-coffee-300 text-sm mt-2">Fill in your order below. It will be sent directly to our WhatsApp. Price: $18 per kilo.</p>
+                </div>
+
+                <form id="orderForm" onsubmit="sendCustomOrder(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-coffee-200 uppercase tracking-wider mb-2">Name (Optional)</label>
+                            <input type="text" id="cust-name" placeholder="Optional" autocomplete="off" class="w-full bg-coffee-900 border border-coffee-700 rounded-xl px-4 py-3 text-white placeholder-coffee-500 focus:outline-none focus:border-coffee-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-coffee-200 uppercase tracking-wider mb-2">Delivery Area</label>
+                            <select id="cust-location" required class="w-full bg-coffee-900 border border-coffee-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-coffee-500">
+                                <option value="">Select your area</option>
+                                <option value="Khaledeh">Khaledeh</option>
+                                <option value="Aramoun">Aramoun</option>
+                                <option value="Bshemoun">Bshemoun</option>
+                                <option value="Dohet al Hoss">Dohet al Hoss</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-coffee-200 uppercase tracking-wider mb-2">Delivery Address</label>
+                        <input type="text" id="cust-address" required placeholder="Street, building, floor, nearby landmark" autocomplete="street-address" class="w-full bg-coffee-900 border border-coffee-700 rounded-xl px-4 py-3 text-white placeholder-coffee-500 focus:outline-none focus:border-coffee-500">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-coffee-200 uppercase tracking-wider mb-2">Coffee Type</label>
+                            <select id="cust-bean" required class="w-full bg-coffee-900 border border-coffee-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-coffee-500">
+                                <option value="Brazilian">Brazilian</option>
+                                <option value="Colombian">Colombian</option>
+                                <option value="Brazilian & Colombian">Brazilian & Colombian (Mix)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-coffee-200 uppercase tracking-wider mb-2">Weight</label>
+                            <select id="cust-qty" class="w-full bg-coffee-900 border border-coffee-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-coffee-500">
+                                <option value="0.25">250g</option>
+                                <option value="0.5">500g</option>
+                                <option value="1" selected>1 kg</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-coffee-200 uppercase tracking-wider mb-2">Preferred Grind</label>
+                        <select id="cust-grind" class="w-full bg-coffee-900 border border-coffee-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-coffee-500">
+                            <option value="Rakweh / Fine">Rakweh / Fine</option>
+                            <option value="Whole Bean">Whole Bean</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-coffee-200 uppercase tracking-wider mb-2">Notes (Optional)</label>
+                        <textarea id="cust-notes" rows="3" placeholder="Delivery timing or other details..." class="w-full bg-coffee-900 border border-coffee-700 rounded-xl px-4 py-3 text-white placeholder-coffee-500 focus:outline-none focus:border-coffee-500"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-4 rounded-xl transition-all duration-300 shadow-xl shadow-emerald-950/60 flex items-center justify-center gap-3 text-base hover:scale-[1.01]">
+                        <i class="fa-brands fa-whatsapp text-2xl"></i>
+                        <span>Send Order Directly to WhatsApp</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="py-20 bg-coffee-800/30 border-t border-coffee-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-widest text-coffee-400">Get In Touch</span>
+                    <h2 class="font-serif text-3xl sm:text-5xl font-bold text-white mt-2 mb-6">Connect With Us Directly</h2>
+                    <p class="text-coffee-300 text-base leading-relaxed mb-8">
+                        Have questions about bean origins, roast profiles, or bulk orders? Message us directly on WhatsApp or follow our roasting journey on Instagram.
+                    </p>
+
+                    <div class="space-y-4">
+                        <a href="https://wa.me/96181851836?text=Hello!%20I%20have%20a%20question%20about%20your%20coffee." target="_blank" rel="noopener" class="flex items-center p-4 bg-coffee-900 rounded-2xl border border-coffee-700 hover:border-emerald-500 transition-all group">
+                            <div class="w-12 h-12 bg-emerald-600/20 text-emerald-400 rounded-xl flex items-center justify-center text-2xl mr-4 group-hover:scale-110 transition-transform">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold text-sm">Chat on WhatsApp</h4>
+                                <p class="text-coffee-400 text-xs">+961 81 851 836 • Fast Replies</p>
+                            </div>
+                        </a>
+
+                        <a href="https://instagram.com" target="_blank" rel="noopener" class="flex items-center p-4 bg-coffee-900 rounded-2xl border border-coffee-700 hover:border-pink-500 transition-all group">
+                            <div class="w-12 h-12 bg-pink-600/20 text-pink-400 rounded-xl flex items-center justify-center text-2xl mr-4 group-hover:scale-110 transition-transform">
+                                <i class="fa-brands fa-instagram"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-semibold text-sm">Follow on Instagram</h4>
+                                <p class="text-coffee-400 text-xs">@noirandbrew • Daily Roasting Clips & Tips</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="relative bg-coffee-900 rounded-3xl p-8 sm:p-12 border border-coffee-700/60 overflow-hidden text-center flex flex-col justify-center items-center min-h-[350px]">
+                    <i class="fa-solid fa-quote-left text-5xl text-coffee-700 mb-6"></i>
+                    <p class="font-serif text-2xl sm:text-3xl font-medium text-white italic mb-6 leading-snug">
+                        "Coffee is a language in itself. Perfect roasting speaks straight to the soul."
+                    </p>
+                    <span class="text-xs uppercase tracking-widest text-coffee-400 font-semibold">— Master Roaster, Noir & Brew</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black text-coffee-400 py-12 border-t border-coffee-800/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-8">
+                <div class="flex items-center gap-3">
+                    <img src="data:image/png;base64,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" alt="Noir & Brew logo" class="h-8 w-auto shrink-0">
+                    <span class="font-serif text-xl font-bold text-white tracking-tight">NOIR & BREW</span>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-6 text-sm text-coffee-300">
+                    <a href="#home" class="hover:text-white transition-colors">Home</a>
+                    <a href="#shop" class="hover:text-white transition-colors">Our Coffee</a>
+                    <a href="#knowledge" class="hover:text-white transition-colors">Brew Guide</a>
+                    <a href="#custom-order" class="hover:text-white transition-colors">Quick Order</a>
+                    <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+                </div>
+
+                <div class="flex items-center space-x-4 text-xl">
+                    <a href="https://wa.me/96181851836" target="_blank" rel="noopener" class="w-10 h-10 rounded-full bg-coffee-900 hover:bg-emerald-600 text-coffee-300 hover:text-white flex items-center justify-center transition-all">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener" class="w-10 h-10 rounded-full bg-coffee-900 hover:bg-pink-600 text-coffee-300 hover:text-white flex items-center justify-center transition-all">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="border-t border-coffee-900 pt-8 text-center text-xs text-coffee-500">
+                <p>&copy; <span id="year"></span> Noir & Brew Coffee Roasters. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp fallback link: shown when the browser blocks the automatic open -->
+    <div id="wa-link" hidden class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-sm z-50">
+        <div class="bg-coffee-800 border border-emerald-600 rounded-2xl p-4 shadow-2xl text-center">
+            <p class="text-sm text-coffee-100 mb-3">Your order is ready. Tap below to send it on WhatsApp.</p>
+            <a id="wa-link-a" href="#" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-full font-semibold text-sm">
+                <i class="fa-brands fa-whatsapp text-lg"></i>
+                <span>Open WhatsApp</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // WhatsApp number in international format, digits only
+        const WHATSAPP_NUMBER = "96181851836";
+        const PRICE_PER_KG = 18;
+
+        // Mobile menu toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const isHidden = mobileMenu.classList.contains('hidden');
+            menuIcon.classList.toggle('fa-bars', isHidden);
+            menuIcon.classList.toggle('fa-xmark', !isHidden);
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                menuIcon.classList.remove('fa-xmark');
+                menuIcon.classList.add('fa-bars');
+            });
+        });
+
+        // Open WhatsApp with a pre-filled message (text is fully URL-encoded).
+        // Browsers and artifact viewers can block window.open, so a visible link is always offered as a fallback.
+        function openWhatsApp(text) {
+            const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+            const fallback = document.getElementById('wa-link');
+            document.getElementById('wa-link-a').href = url;
+            fallback.hidden = false;
+            const opened = window.open(url, '_blank');
+            if (opened) fallback.hidden = true;
+        }
+
+        // Single product quick order
+        function orderProduct(productName) {
+            const text =
+`Hello Noir & Brew! ☕
+
+I would like to order:
+• Coffee: ${productName}
+• Price: $${PRICE_PER_KG} per kilo
+
+Please confirm grind size, quantity, availability and delivery area.`;
+            openWhatsApp(text);
+        }
+
+        // Custom order form
+        function sendCustomOrder(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('cust-name').value.trim();
+            const area = document.getElementById('cust-location').value;
+            const address = document.getElementById('cust-address').value.trim();
+            const bean = document.getElementById('cust-bean').value;
+            const kg = parseFloat(document.getElementById('cust-qty').value);
+            const weightLabel = kg < 1 ? `${kg * 1000}g` : `${kg} kg`;
+            const grind = document.getElementById('cust-grind').value;
+            const notes = document.getElementById('cust-notes').value.trim();
+            const total = (kg * PRICE_PER_KG).toFixed(2);
+
+            let text = `*NEW COFFEE ORDER* ☕\n`;
+            text += `-----------------------\n`;
+            if (name) text += `👤 Name: ${name}\n`;
+            text += `📍 Delivery Area: ${area}\n`;
+            text += `🏠 Address: ${address}\n`;
+            text += `☕ Coffee: ${bean}\n`;
+            text += `📦 Weight: ${weightLabel}\n`;
+            text += `⚙️ Grind: ${grind}\n`;
+            text += `💵 Estimated Total: $${total} ($${PRICE_PER_KG}/kg)\n`;
+            if (notes) text += `📝 Notes: ${notes}\n`;
+            text += `-----------------------\n`;
+            text += `Please process my order!`;
+
+            openWhatsApp(text);
+        }
+    </script>
+</body>
+</html>
